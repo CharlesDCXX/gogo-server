@@ -61,7 +61,27 @@ func setupRouter() *gin.Engine {
 			c.JSON(http.StatusOK, gin.H{"status": "ok"})
 		}
 	})
+	// AsciiJSON
+	r.GET("/someJson", func(c *gin.Context) {
+		//data := map[string]interface{}{
+		//	"name": "donghai< b",
+		//	"age":  18,
+		//}
+		//也可以用下main方是给data当赋值
+		// gin.H{} 是一个用于创建 map[string]interface{} 类型的快捷方式。它常用于在 Gin 路由处理程序中传递数据给 HTML 模板或 JSON 响应
+		data := gin.H{"name": "donghai", "age": 18}
 
+		// 使用 ASCII 字符集返回 JSON 响应
+		//c.AsciiJSON(http.StatusOK, data)
+		//// 使用 UTF-8 字符集返回 JSON 响应
+		c.JSON(http.StatusOK, data)
+	})
+	// HTML渲染
+	//r.LoadHTMLGlob("templates/*")
+	r.LoadHTMLFiles("templates/index.tmpl")
+	r.GET("/index", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.tmpl", gin.H{"title": "webHTML"})
+	})
 	return r
 }
 
