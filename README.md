@@ -1,2 +1,2 @@
 # gogo-server
-use gin and xorm 
+use nutsdb
