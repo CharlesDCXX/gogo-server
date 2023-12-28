@@ -1,3 +1,1 @@
 # gogo-server
-
-use nutsdb
