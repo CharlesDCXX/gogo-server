@@ -33,7 +33,11 @@ func main() {
 
 	time.Sleep(time.Second)
 	// send options
-	_ = json.NewEncoder(conn).Encode(server.DefaultOption)
+	err := json.NewEncoder(conn).Encode(server.DefaultOption)
+
+	if err != nil {
+		log.Panicln("Encode DefaultOption:", err)
+	}
 	cc := codec.NewGobCodec(conn)
 	// send request & receive response
 	for i := 0; i < 5; i++ {
@@ -41,10 +45,16 @@ func main() {
 			ServiceMethod: "Foo.Sum",
 			Seq:           uint64(i),
 		}
-		_ = cc.Write(h, fmt.Sprintf("geerpc req %d", h.Seq))
+		err := cc.Write(h, fmt.Sprintf("geerpc req %d", h.Seq))
+		if err != nil {
+			log.Println("Write:", err)
+		}
 		_ = cc.ReadHeader(h)
 		var reply string
-		_ = cc.ReadBody(&reply)
+		err = cc.ReadBody(&reply)
+		if err != nil {
+			log.Println("ReadBody:", err)
+		}
 		log.Println("reply:", reply)
 	}
 	time.Sleep(time.Second * 10)
